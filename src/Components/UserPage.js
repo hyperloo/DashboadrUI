@@ -24,12 +24,13 @@ class UserPage extends Component {
   }
 
   loadUser = async () => {
+    let status = [];
     this.setState({ loading: true });
     try {
       const res = await axios.get(
         "https://q3rgtdews6.execute-api.us-east-2.amazonaws.com/default/user"
       );
-      const status = [
+      status = [
         { type: "in progress", color: "green" },
         { type: "completed", color: "blue" },
         { type: "cancelled", color: "red" },
@@ -56,7 +57,42 @@ class UserPage extends Component {
       }
     } catch (err) {
       if (err.response) {
-        console.log(err.response.data.msg);
+        const res = {
+          data: {
+            model: {
+              users: [
+                {
+                  id: 1,
+                  name: "Manish Kumar",
+                  email: "manishkp@gmail.com",
+                  phone: "000099999",
+                },
+                {
+                  id: 2,
+                  name: "John Doe",
+                  email: "johndoe@gmail.com",
+                  phone: "000099999",
+                },
+              ],
+            },
+          },
+        };
+        let newUsers = [];
+
+        for (let i = 0; i < res.data.model.users.length * 10; i++) {
+          newUsers.push({
+            ...res.data.model.users[i % res.data.model.users.length],
+            ...status[Math.floor(Math.random() * 4)],
+            users: Math.floor(Math.random() * 4),
+            budget: Math.floor(Math.random() * 1000),
+          });
+        }
+        this.setState({
+          users: newUsers,
+          sorted: [...newUsers],
+          loading: false,
+        });
+        console.log(err.response);
       }
     }
   };
@@ -70,7 +106,7 @@ class UserPage extends Component {
   };
 
   sortUsers = (param) => {
-    let sortUsers = this.state.users;
+    let sortUsers = [].concat(this.state.users);
     if (param === "budget") sortUsers.sort((a, b) => b["budget"] - a["budget"]);
     else if (param === "type")
       sortUsers.sort((a, b) => {
@@ -141,28 +177,30 @@ class UserPage extends Component {
     const createUsers = () => {
       let list = [];
       for (let i = 0; i < sorted.length; i++) {
-        let nam = users[i].name.split(" ");
+        let nam = sorted[i].name.split(" ");
         list.push(
           <div key={i} className="userBox">
-            <div className="avt" style={{ background: users[i].color }}>
+            <div className="avt" style={{ background: sorted[i].color }}>
               {nam[0][0]}
               {nam[0][1]}
             </div>
-            <span>{users[i].name}</span>
-            <span>
-              <span
+            <span>{sorted[i].name}</span>
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <div
                 style={{
-                  color: users[i].color,
-                  fontSize: "1rem",
-                  fontWeight: "900",
+                  background: sorted[i].color,
+                  padding: "0",
+                  width: "0.35rem",
+                  height: "0.35rem",
+                  display: "inline-block",
+                  borderRadius: "50%",
+                  marginRight: "0.2rem",
                 }}
-              >
-                +
-              </span>
-              {users[i].type}
+              ></div>
+              {sorted[i].type}
             </span>
-            <span>{inpImages(users[i].users)}</span>
-            <span>{users[i].budget}</span>
+            <span>{inpImages(sorted[i].users)}</span>
+            <span>{sorted[i].budget}</span>
             <span>...</span>
           </div>
         );
@@ -200,7 +238,7 @@ class UserPage extends Component {
           }}
           className={`${visible && "btnVis"}`}
         >
-          {visible ? <span>&#8592;</span> : <span>&#8594;</span>}
+          <span>&#8594;</span>
         </button>
         <div className="usersTab">
           <div className="navBar">

@@ -29,6 +29,8 @@ class LoginPage extends Component {
       }
     } catch (err) {
       if (err.response) {
+        alert(`Sever Not working, Hello User`);
+        this.props.history.push("/user");
         this.setState({ loading: false, error: err.response.data.msg });
       }
     }

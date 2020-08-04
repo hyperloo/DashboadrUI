@@ -72,13 +72,13 @@ class LoginPage extends Component {
                 )}
               </button>
               <p>
-                <a href="#">Lost Your Password ?</a>
+                <a href="/">Lost Your Password ?</a>
               </p>
             </form>
           </div>
           <p style={{ marginTop: "2rem" }}>
             Don't have an account?{" "}
-            <a href="#">
+            <a href="/">
               <u>Sign up here!</u>
             </a>
           </p>

@@ -92,7 +92,7 @@ class UserPage extends Component {
           sorted: [...newUsers],
           loading: false,
         });
-        console.log(err.response);
+        // console.log(err.response);
       }
     }
   };

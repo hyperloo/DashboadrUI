@@ -12,7 +12,7 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <Switch>
-            <Redirect exact from="/" to="/login" />
+            <Redirect exact from="/" to="/user" />
             <Route
               exact
               path="/login"
